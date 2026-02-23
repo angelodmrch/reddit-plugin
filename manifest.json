@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "Reddit show 18+ fix",
+  "version": "1.0",
+  "description": "Automatically clicks 'show 18+ content' buttons on Reddit posts",
+  
+  "permissions": [
+    "activeTab"
+  ],
+  
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.reddit.com/*",
+        "*://reddit.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  
+  "icons": {
+    "48": "icon.png"
+  }
+}
