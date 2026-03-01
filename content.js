@@ -1,5 +1,6 @@
 // Track which posts have already been unblurred
 const processedPosts = new WeakSet();
+const removedGamePosts = new WeakSet();
 
 // Function to click all 18+ content overlays
 function clickNSFWButtons() {
@@ -39,8 +40,36 @@ function clickNSFWButtons() {
   });
 }
 
+// Remove posts that are game posts (<shreddit-post game="">)
+function removeGamePosts() {
+  const gamePosts = document.querySelectorAll('shreddit-post[game]');
+
+  gamePosts.forEach((post) => {
+    if (removedGamePosts.has(post)) {
+      return;
+    }
+
+    const article = post.closest('article');
+    if (article) {
+      article.remove();
+      removedGamePosts.add(post);
+      console.log('Removed game post');
+      return;
+    }
+
+    post.remove();
+    removedGamePosts.add(post);
+    console.log('Removed game shreddit-post');
+  });
+}
+
+function runAllFilters() {
+  clickNSFWButtons();
+  removeGamePosts();
+}
+
 // Run immediately
-clickNSFWButtons();
+runAllFilters();
 
 // Set up a MutationObserver to watch for new posts being loaded
 const observer = new MutationObserver((mutations) => {
@@ -54,7 +83,7 @@ const observer = new MutationObserver((mutations) => {
   
   if (shouldCheck) {
     // Delay slightly to let Reddit finish rendering
-    setTimeout(clickNSFWButtons, 100);
+    setTimeout(runAllFilters, 100);
   }
 });
 
@@ -65,6 +94,6 @@ observer.observe(document.body, {
 });
 
 // Also check periodically as a backup (every 2 seconds)
-setInterval(clickNSFWButtons, 2000);
+setInterval(runAllFilters, 2000);
 
 console.log('Reddit show 18+ fix loaded');

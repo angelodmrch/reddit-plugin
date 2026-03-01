@@ -1,13 +1,11 @@
 {
   "manifest_version": 2,
-  "name": "Reddit show 18+ fix",
-  "version": "1.0",
-  "description": "Automatically clicks 'show 18+ content' buttons on Reddit posts",
-  
+  "name": "Reddit Plugin",
+  "version": "1.1",
+  "description": "Automatically clicks 'show 18+ content' buttons on Reddit posts",  
   "permissions": [
     "activeTab"
-  ],
-  
+  ],  
   "content_scripts": [
     {
       "matches": [
@@ -17,9 +15,14 @@
       "js": ["content.js"],
       "run_at": "document_end"
     }
-  ],
-  
+  ],  
   "icons": {
     "48": "icon.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "reddit-plugin@example.com",
+      "strict_min_version": "109.0"
+    }
   }
 }

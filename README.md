@@ -1,6 +1,9 @@
-# Reddit show 18+ fix
+# Reddit Plugin
 
-This Firefox extension automatically clicks the "show 18+ content" button on Reddit posts.
+This Firefox extension runs on Reddit pages and applies two automatic feed cleanups:
+
+1. Unblurs NSFW posts by clicking Reddit's "show 18+ content" overlay.
+2. Removes game posts that use the `game` attribute on `shreddit-post`.
 
 ## Installation
 
@@ -11,15 +14,27 @@ This Firefox extension automatically clicks the "show 18+ content" button on Red
 
 ## Features
 
-- Automatically clicks NSFW/18+ content blur overlays
-- Works on both old and new Reddit designs
-- Monitors for new posts dynamically loaded as you scroll
-- Runs automatically on all Reddit pages
+- **NSFW auto-unblur**
+	- Detects Reddit NSFW blur containers (`shreddit-blurred-container[reason="nsfw"]`)
+	- Clicks the reveal target automatically when found
+	- Includes fallback click logic for slightly different DOM structures
+
+- **Game post auto-remove**
+	- Detects posts with `shreddit-post[game]`
+	- Removes the surrounding `<article>` from the feed (or removes the post node if needed)
+	- Useful for hiding Devvit/game content cards from the timeline
+
+- **Works on dynamic feeds**
+	- Uses `MutationObserver` to process newly loaded posts as you scroll
+	- Runs a periodic safety check to catch delayed renders
+
+- **Automatic on Reddit**
+	- Runs on `reddit.com` and `*.reddit.com` pages via content script
 
 ## Files
 
 - `manifest.json` - Extension configuration
-- `content.js` - Main script that detects and clicks 18+ buttons
+- `content.js` - Main script for NSFW auto-unblur + game post removal
 - `icon.png` - Extension icon (optional)
 
 ## Note
@@ -31,4 +46,8 @@ This is a temporary extension. To make it permanent, you would need to:
 
 ## Usage
 
-Once installed, simply browse Reddit. The extension will automatically click any "show 18+ content" buttons that appear.
+Once installed, browse Reddit normally.
+
+- NSFW overlays are auto-clicked when detected.
+- Posts marked with `shreddit-post[game]` are removed from the feed.
+- New posts loaded later are processed automatically as well.
